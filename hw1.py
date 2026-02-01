@@ -1,14 +1,22 @@
 
 # equation: f(x) = e^{-x^4}-x^3+cos(1-x^2)
 import numpy as np
+
 def f(x):
     return np.exp(-x**4) - x**3 + np.cos(1 - x**2)
 
 # Bisection Method
-def bisection_method(func, a, b, tol=1e-5, max_iter=100):
-    if func(a) * func(b) >= 0:
-        raise ValueError("Function has the same signs at the endpoints a and b.")
-    
+def bisection_method(func, a, b, tol=1e-4, max_iter=100):
+    lower, upper = None, None
+    xs = np.linspace(a, b, 5000)
+    for i in range(len(xs) - 1):
+        if func(xs[i]) * func(xs[i+1]) < 0:
+            lower, upper = xs[i], xs[i+1]
+            break
+    if lower is None:
+        raise ValueError("No sign change found in interval")
+    a = lower
+    b = upper
     for i in range(max_iter):
         c = (a + b) / 2
         if abs(func(c)) < tol or (b - a) / 2 < tol:
@@ -20,7 +28,7 @@ def bisection_method(func, a, b, tol=1e-5, max_iter=100):
     return (a + b) / 2
 
 # Newton's Method
-def newtons_method(func, dfunc, x0, tol=1e-5, max_iter=100):
+def newtons_method(func, dfunc, x0, tol=1e-4, max_iter=100):
     x = x0
     for i in range(max_iter):
         fx = func(x)
@@ -33,7 +41,7 @@ def newtons_method(func, dfunc, x0, tol=1e-5, max_iter=100):
     return x
 
 # Secant Method
-def secant_method(func, x0, x1, tol=1e-5, max_iter=100):
+def secant_method(func, x0, x1, tol=1e-4, max_iter=100):
     for i in range(max_iter):
         f_x0 = func(x0)
         f_x1 = func(x1)
@@ -58,10 +66,13 @@ def main():
     # Define the derivative of f for Newton's method
 
     # Bisection Method
-    root_bisection = bisection_method(f, -1, 1)
+    root_bisection = bisection_method(f, a=-1, b=1)
     print(f"Bisection Method Root: {root_bisection}")
 
     # Newton's Method
+    def df(x):
+        return -4*x**3 * np.exp(-x**4) - 3*x**2 + 2*x*np.sin(1 - x**2)
+
     root_newton = newtons_method(f, df, x0=0.1111)
     print(f"Newton's Method Root: {root_newton}")
 
@@ -72,3 +83,6 @@ def main():
     # Monte Carlo Method
     root_monte_carlo = monte_carlo_method(f, 0.3, 0.7)
     print(f"Monte Carlo Method Root: {root_monte_carlo}")
+
+if __name__ == "__main__":
+       main()
