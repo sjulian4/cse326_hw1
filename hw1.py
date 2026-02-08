@@ -4,7 +4,7 @@
 import numpy as np
 
 def f(x):
-    return np.exp(-x**4) - x**3 + np.cos(1 - x**2)
+    return np.exp(-x**4) - x**3 - np.cos(1 - x**2)
 
 # Bisection Method
 def bisection_method(func, a, b, tol=1e-4, max_iter=100):
@@ -18,59 +18,75 @@ def bisection_method(func, a, b, tol=1e-4, max_iter=100):
         raise ValueError("No sign change found in interval")
     a = lower
     b = upper
+    iterations = 0
     for i in range(max_iter):
+        iterations += 1
         c = (a + b) / 2
         if abs(func(c)) < tol or (b - a) / 2 < tol:
+            print("Bisection iterations: " + str(iterations))
             return c
         if func(c) * func(a) < 0:
             b = c
         else:
             a = c
+    print("Bisection iterations: " + str(iterations))
     return (a + b) / 2
+
 
 # Newton's Method
 def newtons_method(func, dfunc, x0, tol=1e-4, max_iter=100):
+    iterations = 0
     x = x0
     for i in range(max_iter):
+        iterations += 1
         fx = func(x)
         dfx = dfunc(x)
         if abs(fx) < tol:
+            print("Newton's iterations: " + str(iterations))
             return x
         if dfx == 0:
             raise ValueError("Derivative is zero. No solution found.")
         x = x - fx / dfx
+    print("Newton's iterations: " + str(iterations))
     return x
 
 # Secant Method
 def secant_method(func, x0, x1, tol=1e-4, max_iter=100):
+    iterations = 0
     for i in range(max_iter):
+        iterations += 1
         f_x0 = func(x0)
         f_x1 = func(x1)
         if abs(f_x1) < tol:
+            print("Secant iterations: " + str(iterations))
             return x1
         if f_x1 - f_x0 == 0:
             raise ValueError("Division by zero in secant method.")
         x2 = x1 - f_x1 * (x1 - x0) / (f_x1 - f_x0)
         if abs(x2 - x1) < tol:
+            print("Secant iterations: " + str(iterations))
             return x2
         x0, x1 = x1, x2
+    print("Secant iterations: " + str(iterations))
     return x1
 
 # Monte Carlo Method
 def monte_carlo_method(func, lower_bound, upper_bound, num_samples=100000):
+    np.random.seed(0)
     samples = np.random.uniform(lower_bound, upper_bound, num_samples)
     func_values = func(samples)
     min_index = np.argmin(np.abs(func_values))
+    print("Monte Carlo iterations: " + str(min_index))
     return samples[min_index]
 
 def main():
 
-    iterations = 2000
+    iterations = 10000
     # Define the derivative of f for Newton's method
 
     # Bisection Method
-    # root_bisection = bisection_method(f, a=-1, b=1, max_iter=iterations)
-    # print(f"Bisection Method Root: {root_bisection}")
+    root_bisection = bisection_method(f, a=-1, b=1, max_iter=iterations)
+    print(f"Bisection Method Root: {root_bisection}")
 
 
     # Newton's Method
@@ -85,7 +101,7 @@ def main():
     print(f"Secant Method Root: {root_secant}")
 
     # Monte Carlo Method
-    root_monte_carlo = monte_carlo_method(func=f, lower_bound=0.3, upper_bound=0.7,num_samples=iterations)
+    root_monte_carlo = monte_carlo_method(func=f, lower_bound=0.3, upper_bound=0.7)
     print(f"Monte Carlo Method Root: {root_monte_carlo}")
 
 if __name__ == "__main__":
