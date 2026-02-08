@@ -7,7 +7,7 @@ def f(x):
     return np.exp(-x**4) - x**3 - np.cos(1 - x**2)
 
 def df(x):
-    return -4*x**3 * np.exp(-x**4) - 3*x**2 + 2*x*np.sin(1 - x**2)
+    return -4*x**3 * np.exp(-x**4) - 3*x**2 - 2*x*np.sin(1 - x**2)
 
 x_true = 0.54075
 
@@ -32,14 +32,14 @@ def main():
     # run Newton's method with initial guess x0 =0.1111
 
     iters1 = int(1.0e3)
-    x_0 = 0.1111
+    x0 = 0.1111
     for i in range(iters1):
-        x_0 = x_0 - f(x_0) / df(x_0)
-        if abs(f(x_0)) < 5.0e-5:
-            print("Newton's method: approximate root is " + str(x_0) + ". Iterations: " + str(i+1) + ".\nRelative error: " + str(100.0 * abs(x_0 - x_true) / x_true) + "%.")
+        x0 = x0 - f(x0) / df(x0)
+        if abs(f(x0)) < 5.0e-5:
+            print("Newton's method: approximate root is " + str(x0) + ". Iterations: " + str(i+1) + ".\nRelative error: " + str(100.0 * abs(x0 - x_true) / x_true) + "%.")
             break
 
-    # run secand method with 
+    # run secant method with x_0 = -1 and x_1 = 1
     iters2 = int(1.0e3)
     x_0 = -1.0
     x_1 = 1.0
