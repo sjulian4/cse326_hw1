@@ -1,5 +1,6 @@
 
 # equation: f(x) = e^{-x^4}-x^3+cos(1-x^2)
+# data: https://docs.google.com/spreadsheets/d/1ISUL8f31Oi0aGR5STT-P3AiG6PJPRuMBblmrMWydlx0/edit?usp=sharing
 import numpy as np
 
 def f(x):
@@ -63,25 +64,28 @@ def monte_carlo_method(func, lower_bound, upper_bound, num_samples=100000):
     return samples[min_index]
 
 def main():
+
+    iterations = 2000
     # Define the derivative of f for Newton's method
 
     # Bisection Method
-    root_bisection = bisection_method(f, a=-1, b=1)
-    print(f"Bisection Method Root: {root_bisection}")
+    # root_bisection = bisection_method(f, a=-1, b=1, max_iter=iterations)
+    # print(f"Bisection Method Root: {root_bisection}")
+
 
     # Newton's Method
     def df(x):
         return -4*x**3 * np.exp(-x**4) - 3*x**2 + 2*x*np.sin(1 - x**2)
 
-    root_newton = newtons_method(f, df, x0=0.1111)
+    root_newton = newtons_method(f, df, x0=0.1111, max_iter=iterations)
     print(f"Newton's Method Root: {root_newton}")
 
     # Secant Method
-    root_secant = secant_method(f, x0=-1, x1=1)
+    root_secant = secant_method(f, x0=-1, x1=1,max_iter=iterations)
     print(f"Secant Method Root: {root_secant}")
 
     # Monte Carlo Method
-    root_monte_carlo = monte_carlo_method(f, 0.3, 0.7)
+    root_monte_carlo = monte_carlo_method(func=f, lower_bound=0.3, upper_bound=0.7,num_samples=iterations)
     print(f"Monte Carlo Method Root: {root_monte_carlo}")
 
 if __name__ == "__main__":
