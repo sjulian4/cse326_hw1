@@ -4,11 +4,14 @@
 import numpy as np
 import time
 
+
+# FLOPS: exponential, cosine, sine, division -> 7. mutiply add subtract -> 1.
+
 def f(x):
-    return np.exp(-x**4) - x**3 - np.cos(1 - x**2)
+    return np.exp(-x**4) - x**3 - np.cos(1 - x**2) # 7+7+7+1+1+1+7 = 31
 
 def df(x):
-    return -4*x**3 * np.exp(-x**4) - 3*x**2 - 2*x*np.sin(1 - x**2)
+    return -4*x**3 * np.exp(-x**4) - 3*x**2 - 2*x*np.sin(1 - x**2) # 1+7+1+7+7+1+1+7+1+1+1+7+1+7 = 50
 
 x_true = 0.54075
 
@@ -24,17 +27,28 @@ def main():
 
     for i in range(iters0):
         x_mid = (x_low + x_high) / 2.0
+        bisection_flops += 1 
+        bisection_flops += 7
         
+        bisection_flops += 31
         if abs(f(x_mid)) < 5.0e-5:
             print("Bisection method: approximate root is " + str(x_mid) + ". Iterations: " + str(i+1) + ".\nRelative error: " + str(100.0 * abs(x_mid - x_true) / x_true) + "%.")
             break
+
+        bisection_flops += 62
+        bisection_flops +=1 
         if(f(x_high) * f(x_mid) < 0.0):
             x_low = x_mid
         elif f(x_low) * f(x_mid) < 0.0:
+            bisection_flops += 62
+            bisection_flops += 1
             x_high = x_mid
+        else:
+            bisection_flops += 62
+            bisection_flops += 1 #to make sure the if statement FLOPS get counted
 
     bisection_end_time = time.perf_counter()
-    print("Bisection method took " + str(bisection_end_time - bisection_start_time) + " seconds.")
+    print("Bisection method took " + str(bisection_end_time - bisection_start_time) + " seconds. Bisection method had " + str(bisection_flops) + " FLOPs.")
 
 
     newton_start_time = time.perf_counter()
@@ -42,46 +56,63 @@ def main():
 
     iters1 = int(1.0e3)
     x0 = 0.1111
+    newton_flops = 0
+
     for i in range(iters1):
         x0 = x0 - f(x0) / df(x0)
+        newton_flops += 1
+        newton_flops += 31
+        newton_flops += 50
+        newton_flops += 31
         if abs(f(x0)) < 5.0e-5:
             print("Newton's method: approximate root is " + str(x0) + ". Iterations: " + str(i+1) + ".\nRelative error: " + str(100.0 * abs(x0 - x_true) / x_true) + "%.")
             break
     newton_end_time = time.perf_counter()
-    print("Newton's method took " + str(newton_end_time - newton_start_time) + " seconds.")
+    print("Newton's method took " + str(newton_end_time - newton_start_time) + " seconds. Newton's method had " + str(newton_flops) + " FLOPs.")
 
 
     secant_start_time = time.perf_counter()
     # run secant method with x_0 = -1 and x_1 = 1
+
+    secant_flops = 0
+
     iters2 = int(1.0e3)
     x_0 = -1.0
     x_1 = 1.0
     for i in range(iters2):
         x_2 = x_1 - f(x_1) * (x_1 - x_0) / (f(x_1) - f(x_0))
+        secant_flops += 11
+        secant_flops += 31
+        secant_flops += 62
         x_0 = x_1
         x_1 = x_2
+        secant_flops += 31
         if abs(f(x_1)) < 5.0e-5:
             print("Secant method: approximate root is " + str(x_1) + ". Iterations: " + str(i+1) + ".\nRelative error: " + str(100.0 * abs(x_1 - x_true) / x_true) + "%.")
             break
     secant_end_time = time.perf_counter()
 
-    print("Secant method took " + str(secant_end_time - secant_start_time) + " seconds.")    
+    print("Secant method took " + str(secant_end_time - secant_start_time) + " seconds. The Secant method had " + str(secant_flops) + " FLOPs.")    
 
 
     monte_carlo_start_time = time.perf_counter()
     # run monte carlo method with [0.3,0.7]
+
+    monte_flops = 0
+
     np.random.seed(2)
 
     guess_arr = np.random.uniform(0.3, 0.7, int(1.0e4))
     for i in range(guess_arr.size):
+        monte_flops += 31
         if abs(f(guess_arr[i])) < 5.0e-5:
-            print("Monte Carlo method: approximate root is " + str(guess_arr[i]) + "Iterations: " + str(i+1) + ".\nRelative error: " + str(100.0 * abs(guess_arr[i] - x_true) / x_true) + "%.")
+            print("Monte Carlo method: approximate root is " + str(guess_arr[i]) + ". Iterations: " + str(i+1) + ".\nRelative error: " + str(100.0 * abs(guess_arr[i] - x_true) / x_true) + "%.")
             break
 
     monte_carlo_end_time = time.perf_counter()
 
 
-    print("Monte Carlo method took " + str(monte_carlo_end_time - monte_carlo_start_time) + " seconds.")
+    print("Monte Carlo method took " + str(monte_carlo_end_time - monte_carlo_start_time) + " seconds. The Monte Carlo method had " + str(monte_flops) + " FLOPs.")
 
 
 if __name__ == "__main__":
