@@ -41,6 +41,13 @@ print("P_4(6) = " + str(P4(6)))
 
 # (2) Make a quadratic fit of the data Q_2(t) = a_0 + a_1t + a_2t^2 and compute Q_2(t = 6) using Q_2(t).
 
+Q2_coefficients = np.polyfit(t_values, prices, 2)
+
+Q2 = np.poly1d(Q2_coefficients)
+
+print("Q_2(t) = " + str(Q2))
+
+print("Q_2(6) = " + str(Q2(6)))
 
 
 
