@@ -30,6 +30,8 @@ for i in range(X.shape[0]):
     for j in range(X.shape[1]):
         X[i,j] += t_arr[i] ** j
 
+# Each row becomes [1, t, t^2, t^3]
+
 # implement OLS
 
 a = np.matmul(np.matmul(np.linalg.inv(np.matmul(X.transpose(), X)), X.transpose()), y_arr)
