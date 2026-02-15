@@ -23,7 +23,7 @@ t_values = np.array([1,2,3,4,5])
 prices = np.array([5015,5190,5400,5396,4865]) # the 'y' value, and rightmost matrix on the page 6 of topic 2 notes
 
 
-def P4(t):
+def P_4(t):
     func = 0.0
     for i in range(prices.size):
         coefficient = 1
@@ -36,13 +36,13 @@ def P4(t):
 
 x_arr = np.linspace(1.0, 6.0, 100)
 plt.scatter(t_values, prices, color='blue', label='Data')
-plt.plot(x_arr, P4(x_arr), color='red', label=r'$P_4(t)$')
+plt.plot(x_arr, P_4(x_arr), color='red', label=r'$P_4(t)$')
 plt.xlabel('t (days)')
 plt.ylabel('Gold spot price ($)')
 plt.legend()
 plt.savefig('./P4interpolate.png', dpi=600)
 
-print("P_4(6) = " + str(P4(6)))
+print("P_4(6) = " + str(P_4(6)))
 
 
 
@@ -67,6 +67,9 @@ plt.xlabel('t (days)')
 plt.ylabel('Gold spot price ($)')
 plt.legend()
 plt.savefig('./Q2fit.png', dpi=600)
+
+print("Q_2(6) = " + str(Q_2(6)))
+
 
 
 
