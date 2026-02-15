@@ -53,7 +53,7 @@ X = np.zeros((prices.size, 3))
 for i in range(X.shape[0]):
     for j in range(X.shape[1]):
         X[i,j] += t_values[i]**j
-
+# each row is [1, t, t^2]
 
 ## implement OLS
 a = np.matmul(np.matmul(np.linalg.inv(np.matmul( X.transpose(), X )), X.transpose()), prices)
