@@ -35,7 +35,7 @@ for i in range(X.shape[0]):
 # implement OLS
 
 a = np.matmul(np.matmul(np.linalg.inv(np.matmul(X.transpose(), X)), X.transpose()), y_arr)
-print(str(a))
+
 def Q3(x):
     return (a[0] + a[1]*x + a[2]*x**2 + a[3]*x**3)
 
