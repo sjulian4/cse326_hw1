@@ -45,7 +45,7 @@ plt.ylim(390, 460) # to match providfed figure
 plt.scatter(t_arr, y_arr, color='blue', label='Data')
 plt.plot(x_arr, Q3(x_arr), color='red', label=r'$Q_3(t)$')
 plt.xlabel('t (days)')
-plt.ylabel('Gold spot price ($)')
+plt.ylabel('Tesla stock price ($)')
 plt.legend()
 plt.savefig('./Q3fit.png', dpi=600)
 
